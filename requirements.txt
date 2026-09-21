@@ -1,0 +1,6 @@
+# Enough to verify the stored results and to regenerate every table and figure
+# (python reproduce.py check | tables | figures | all).  No PyTorch and no data files are needed.
+# Tested with numpy 2.2, pandas 2.3, matplotlib 3.10 on Python 3.12.
+numpy>=2.0
+pandas>=2.2
+matplotlib>=3.9

@@ -1,0 +1,19 @@
+# everything that reproduce.py generates
+output/
+
+# data are downloaded by the user from NASA and are not redistributed here (see data/README.md)
+data/*
+!data/README.md
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,5 @@
+# text files always use LF (also on Windows), binary files are never touched
+* text=auto eol=lf
+*.npz binary
+*.pdf binary
+*.png binary

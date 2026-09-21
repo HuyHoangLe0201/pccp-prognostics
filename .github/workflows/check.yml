@@ -1,0 +1,26 @@
+# Runs the quick start on every push: verifies the stored results and regenerates every table and figure.
+# It needs no data files and no PyTorch. Delete this file if you do not want GitHub to run it.
+name: reproduce
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python reproduce.py check
+      - run: python reproduce.py tables
+      - run: python reproduce.py figures
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tables-and-figures
+          path: output/

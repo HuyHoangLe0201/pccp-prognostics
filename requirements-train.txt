@@ -1,0 +1,13 @@
+# Everything needed to retrain the networks from scratch (python reproduce.py retrain ...).
+# Tested with scipy 1.15, scikit-learn 1.6, torch 2.9 (CPU) on Python 3.12.
+#
+# The default PyTorch wheel on Linux is large because it contains CUDA. The CPU-only wheel is enough here:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+-r requirements.txt
+scipy>=1.13
+scikit-learn>=1.5
+torch>=2.5
+
+# only for the legacy script legacy_notebooks/PCCP_Improved_v9.py (Table 10)
+seaborn
+tqdm

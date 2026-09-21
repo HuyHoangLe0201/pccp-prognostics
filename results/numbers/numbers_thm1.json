@@ -1,0 +1,11 @@
+{
+ "n_seeds": 30,
+ "picp_pccp_mean": 0.9042393064955289,
+ "picp_fcp_mean": 0.9042299743950327,
+ "picp_pccp_sd": 0.04308279262758857,
+ "picp_se": 0.00786580578748251,
+ "max_diff_feasible_subset": 0.0,
+ "max_diff_full_sample": 20.35963249206543,
+ "mean_feasible_cal_points": 2975.733333333333,
+ "mean_feasible_test_points": 2992.5666666666666
+}

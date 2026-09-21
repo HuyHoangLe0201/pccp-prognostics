@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use this code or the stored results, please cite the paper below."
+type: software
+title: "PCCP: code and results for Post-hoc Constrained Conformal Prediction for Prognostics"
+authors:
+  - family-names: Le
+    given-names: Huy Hoang
+    orcid: "https://orcid.org/0009-0009-2138-5468"
+    affiliation: "R&D Department, PowerMore Ltd., Da Nang, Vietnam"
+  - family-names: Huynh
+    given-names: Dai
+    orcid: "https://orcid.org/0009-0005-5114-5191"
+    affiliation: "Department of Electrical Engineering, University of Science and Technology, the University of Danang, Vietnam"
+  - family-names: Nguyen
+    given-names: Kim-Anh
+    orcid: "https://orcid.org/0000-0003-3408-847X"
+    affiliation: "Department of Electrical Engineering, University of Science and Technology, the University of Danang, Vietnam"
+license: MIT
+keywords:
+  - conformal prediction
+  - uncertainty quantification
+  - prognostics
+  - remaining useful life
+  - distribution shift
+  - adaptive conformal inference
+repository-code: "https://github.com/HuyHoangLe0201/pccp-prognostics"
+# Add the DOI after the repository is archived (for example on Zenodo):
+# doi: "10.5281/zenodo.<number>"
+preferred-citation:
+  type: article
+  title: "Post-hoc Constrained Conformal Prediction for Prognostics: Feasible Intervals that Compose with Adaptive Calibration under Distribution Shift"
+  authors:
+    - family-names: Le
+      given-names: Huy Hoang
+    - family-names: Huynh
+      given-names: Dai
+    - family-names: Nguyen
+      given-names: Kim-Anh
+  journal: "Heliyon"
+  year: 2026
+  status: submitted
+  notes: "Manuscript HELIYON-D-26-06430, under revision. Update volume, pages and DOI after publication."
