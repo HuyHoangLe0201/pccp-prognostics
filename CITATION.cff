@@ -24,8 +24,6 @@ keywords:
   - distribution shift
   - adaptive conformal inference
 repository-code: "https://github.com/HuyHoangLe0201/pccp-prognostics"
-# Add the DOI after the repository is archived (for example on Zenodo):
-# doi: "10.5281/zenodo.<number>"
 preferred-citation:
   type: article
   title: "Post-hoc Constrained Conformal Prediction for Prognostics: Feasible Intervals that Compose with Adaptive Calibration under Distribution Shift"
