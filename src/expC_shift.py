@@ -233,13 +233,15 @@ def sequential(L, U, unit, cycle, life, cf_list, delta):
 
 # ----------------------------------------------------------------------------- analyses
 def analysis_B(model, SB, q, cap, seed_scores):
-    """Sequential maintenance simulation on complete engines (all six constructors, oracle and end-of-life feedback)."""
+    """Sequential maintenance simulation on complete engines (all six constructors; oracle, fixed-delay (d in DELAYS) and
+    end-of-life feedback).  The delayed protocols were added after the first release; the oracle and end-of-life results
+    are unchanged (the same code path, reproduced exactly)."""
     from common import predict
     fB = np.clip(predict(model, SB["X"].astype(np.float64)), 0.0, cap)
     yB = np.minimum(SB["true_rul"], cap)
     out = {"rmse": float(np.sqrt(np.mean((fB - yB) ** 2))), "n": int(len(fB)), "n_units": int(len(np.unique(SB["unit"])))}
     seq = {}
-    for prot, kw in (("oracle", {}), ("eol", {"eol": True})):
+    for prot, kw in (("oracle", {}), *[(f"delay{d}", {"delay": d}) for d in DELAYS], ("eol", {"eol": True})):
         L, U, A, dg = run_aci(fB, yB, SB["unit"], seed_scores, cap, **kw)
         P = {"CP": (fB - q, fB + q), "ACI": (L, U)}
         for nm in ("CP", "ACI"):

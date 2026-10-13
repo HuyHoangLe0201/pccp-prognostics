@@ -51,7 +51,15 @@ The three ACI-based constructors share one level trajectory per feedback protoco
 the miss indicators of ACI and of projected ACI differ (Theorem 2(i); zero in every run). Stream A is the official test engines
 (coverage, delay and per-moment analyses), Stream B the complete run-to-failure engines of the target training file (sequential
 maintenance simulation). The failure share of a cost-minimizing policy is not stable across seeds when the intervals are uninformative
-(end-of-life ACI on FD004: 0-1 % in two seeds, 74-91 % in three); costs are.
+(end-of-life ACI on FD004: 0-1 % in two seeds, 74-91 % in three; the definitional projection with a delay of 125 cycles: 0 % in three
+seeds, 57-59 % in two); costs are.
+
+The sequential simulation (Stream B) uses oracle, fixed-delay (d = 10, 50, 125 steps) and end-of-life feedback. In the paper the delay of
+125 cycles is the longest delay of a *capped* label (Section 4.7), and Tables 16-17 and Fig. 8 show it next to the oracle and end-of-life
+columns. The three delayed protocols were added after release v1.0.0 with the same code path (`run_aci(..., delay=d)` of Stream A): for the
+oracle and end-of-life protocols the re-run reproduced the stored results of all 5 seeds, 3 caps and 2 target domains exactly (difference 0),
+so only the keys `delay10`, `delay50`, `delay125` of `B.sequential` in `results/expC/expC_seed<k>.json` are new. As a consequence the
+check of Proposition 2 (cost rates at beta = 0 of projected and unprojected constructors) covers 12 000 comparisons instead of 4 800.
 
 The original script of the FD001 -> FD004 experiment was not available, so `expC_shift.py` is a full re-implementation whose protocol is
 specified in Section 4.7 of the paper; its numbers are the ones reported.

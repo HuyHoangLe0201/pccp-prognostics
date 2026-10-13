@@ -64,6 +64,8 @@ for fd in ("FD004", "FD003"):
 # ------------------------------------------------------------------------------------------------ 2. aggregation
 R = [json.load(open(p)) for p in sorted(glob.glob(f"{RES}/expC/expC_seed*.json"))]
 N = json.load(open(f"{RES}/numbers/numbers_C.json"))
+# feedback protocols of the sequential simulation in the stored results (the delayed ones were added after the first release)
+SEQP = [p for p in ("oracle", "delay10", "delay50", "delay125", "eol") if p in R[0]["targets"]["FD004"]["caps"]["125"]["B"]["sequential"]]
 worst = 0.0
 for fd in ("FD004", "FD003"):
     A = [r["targets"][fd]["caps"]["125"]["A"] for r in R]
@@ -74,7 +76,7 @@ for fd in ("FD004", "FD003"):
         for arm in ("CP", "PCCP-R", "ACI", "PCCP-inf+ACI", "PCCP-R+ACI"):
             for t in ("capped", "uncapped"):
                 worst = max(worst, abs(np.mean([a["per_moment"][cf][arm][t] for a in A]) - N[fd]["per_moment"][cf][arm][t][0]))
-    for prot in ("oracle", "eol"):
+    for prot in SEQP:
         for arm in ("CP", "ACI", "PCCP-inf+ACI", "PCCP-R+ACI"):
             for delta in ("1", "5", "10", "25"):
                 for cf in ("5", "20", "100"):
@@ -89,7 +91,7 @@ for r in R:
     for fd in ("FD004", "FD003"):
         for cap in ("100", "125", "150"):
             seq = r["targets"][fd]["caps"][cap]["B"]["sequential"]
-            for prot in ("oracle", "eol"):
+            for prot in SEQP:
                 for a, b in pairs:
                     for delta in ("1", "5", "10", "25"):
                         for cf in ("5", "10", "20", "50", "100"):

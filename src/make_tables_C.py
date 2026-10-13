@@ -61,15 +61,20 @@ L += [r"\bottomrule", r"\end{tabular}"]
 w("tab_decision.tex", L)
 
 # ------------------------------------------------------------------ Table: sequential simulation
-L = [r"\footnotesize\setlength{\tabcolsep}{4pt}", r"\begin{tabular}{@{}lcccccccc@{}}", r"\toprule",
-     r" & \multicolumn{4}{c}{FD001$\to$FD004} & \multicolumn{4}{c}{FD001$\to$FD003} \\", r"\cmidrule(lr){2-5}\cmidrule(lr){6-9}",
-     r" & \multicolumn{2}{c}{Oracle} & \multicolumn{2}{c}{End of life} & \multicolumn{2}{c}{Oracle} & \multicolumn{2}{c}{End of life} \\",
-     r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}",
-     r"Constructor & Cost & Fail & Cost & Fail & Cost & Fail & Cost & Fail \\", r"\midrule"]
+# column groups: oracle, [fixed delay of 125 cycles,] end of life (the delayed protocol was added after the first release)
+HAVE_D = "delay125" in N["FD004"]["sequential"]["125"]
+SEQ = (("oracle", "Oracle"), ("delay125", "$d=125$"), ("eol", "End of life")) if HAVE_D else (("oracle", "Oracle"), ("eol", "End of life"))
+G = len(SEQ)
+L = [r"\footnotesize\setlength{\tabcolsep}{%dpt}" % (3 if HAVE_D else 4), r"\begin{tabular}{@{}l" + "c" * (4 * G) + r"@{}}", r"\toprule",
+     r" & \multicolumn{%d}{c}{FD001$\to$FD004} & \multicolumn{%d}{c}{FD001$\to$FD003} \\" % (2 * G, 2 * G),
+     r"\cmidrule(lr){2-%d}\cmidrule(lr){%d-%d}" % (1 + 2 * G, 2 + 2 * G, 1 + 4 * G),
+     " & " + " & ".join(r"\multicolumn{2}{c}{%s}" % lab for _ in range(2) for _, lab in SEQ) + r" \\",
+     "".join(r"\cmidrule(lr){%d-%d}" % (2 + 2 * i, 3 + 2 * i) for i in range(2 * G)),
+     r"Constructor & " + " & ".join(["Cost & Fail"] * (2 * G)) + r" \\", r"\midrule"]
 for arm in ARMS:
     cells = []
     for fd in ("FD004", "FD003"):
-        for prot in ("oracle", "eol"):
+        for prot, _ in SEQ:
             v = N[fd]["sequential"]["125"][prot][arm]["10"]["20"]
             cells += [f"{1e3 * v['rate'][0]:.1f}", f"{100 * v['fail_rate'][0]:.0f}\\%"]
     L.append(NAME[arm] + " & " + " & ".join(cells) + r" \\")
@@ -82,10 +87,10 @@ seq = N["FD004"]["sequential"]
 rows = []
 for cap, delta, cf in (("125", "10", "5"), ("125", "10", "20"), ("125", "10", "100"), ("125", "1", "20"), ("125", "5", "20"), ("125", "25", "20"),
                        ("100", "10", "20"), ("150", "10", "20")):
-    for prot in ("oracle", "eol"):
+    for prot, plab in ((("oracle", "oracle"), ("delay125", "delay 125"), ("eol", "end of life")) if HAVE_D else (("oracle", "oracle"), ("eol", "end of life"))):
         v = lambda arm: seq[cap][prot][arm][delta][cf]["rate"][0] * 1e3
         lab = rf"$\Rmax={cap}$, $\Delta={delta}$, $c_f/c_p={cf}$" if prot == "oracle" else ""
-        L.append(f"{lab} & {'oracle' if prot == 'oracle' else 'end of life'} & {v('CP'):.1f} & {v('PCCP-R'):.1f} & {v('ACI'):.1f} & {v('PCCP-inf+ACI'):.1f} & {v('PCCP-R+ACI'):.1f} \\\\")
+        L.append(f"{lab} & {plab} & {v('CP'):.1f} & {v('PCCP-R'):.1f} & {v('ACI'):.1f} & {v('PCCP-inf+ACI'):.1f} & {v('PCCP-R+ACI'):.1f} \\\\")
     L.append(r"\addlinespace")
 L += [r"\bottomrule", r"\end{tabular}"]
 w("tab_seq_sens.tex", L)

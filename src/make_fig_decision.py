@@ -27,22 +27,26 @@ N = json.load(open(NUM))
 ARMS = ["CP", "PCCP-inf", "PCCP-R", "ACI", "PCCP-inf+ACI", "PCCP-R+ACI"]
 LAB = ["CP", "PCCP\n$[0,\\infty)$", "PCCP\n$[0,R_{\\max}]$", "ACI", "PCCP$[0,\\infty)$\n$+$ACI", "PCCP$[0,R_{\\max}]$\n$+$ACI"]
 COL = ["#2E86AB", "#5FA8C8", "#1f6f8b", "#E07B39", "#D9534F", "#8e2a1f"]
-fig, axs = plt.subplots(1, 2, figsize=(10.6, 4.7), sharey=False)
+# groups of bars: oracle, [fixed delay of 125 cycles,] end of life (the delayed protocol was added after the first release)
+HAVE_D = "delay125" in N["FD004"]["sequential"]["125"]
+PROTS = (("oracle", "oracle\nfeedback"), ("delay125", "delay of\n125 cycles"), ("eol", "end-of-life\nfeedback")) if HAVE_D else (("oracle", "oracle feedback"), ("eol", "end-of-life feedback"))
+STEP, FS, WIDTH = (7.0, 7, 11.6) if HAVE_D else (7.5, 7.5, 10.6)
+fig, axs = plt.subplots(1, 2, figsize=(WIDTH, 4.7), sharey=False)
 for ax, fd, title in zip(axs, ("FD004", "FD003"), ("(a) FD001$\\to$FD004: severe shift", "(b) FD001$\\to$FD003: mild shift")):
     seq = N[fd]["sequential"]["125"]
-    top = max(seq[p][a][DELTA][CF]["rate"][0] + seq[p][a][DELTA][CF]["rate"][1] for p in ("oracle", "eol") for a in ARMS) * 1e3
+    top = max(seq[p][a][DELTA][CF]["rate"][0] + seq[p][a][DELTA][CF]["rate"][1] for p, _ in PROTS for a in ARMS) * 1e3
     ax.set_ylim(0, top * 1.14)
     x0 = 0
     ticks, tlabels = [], []
-    for prot, plab in (("oracle", "oracle feedback"), ("eol", "end-of-life feedback")):
+    for prot, plab in PROTS:
         for i, arm in enumerate(ARMS):
             v = seq[prot][arm][DELTA][CF]
             mean, sd = 1e3 * v["rate"][0], 1e3 * v["rate"][1]
             ax.bar(x0 + i, mean, 0.8, yerr=sd, color=COL[i], capsize=2, alpha=0.92)
-            ax.text(x0 + i, mean + sd + 0.02 * ax.get_ylim()[1], f"{100 * v['fail_rate'][0]:.0f}%", ha="center", fontsize=7.5, color="#333333")
+            ax.text(x0 + i, mean + sd + 0.02 * ax.get_ylim()[1], f"{100 * v['fail_rate'][0]:.0f}%", ha="center", fontsize=FS, color="#333333")
         ticks.append(x0 + 2.5)
         tlabels.append(plab)
-        x0 += 7.5
+        x0 += STEP
     ax.set_xticks([t for t in ticks])
     ax.set_xticklabels(tlabels)
     ax.set_title(title)

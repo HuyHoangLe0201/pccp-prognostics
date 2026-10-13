@@ -14,6 +14,8 @@ R = [json.load(open(f)) for f in sorted(glob.glob(f"{OUT}/expC_seed*.json"))]
 print("seeds:", [r["seed"] for r in R])
 TARGETS = ["FD004", "FD003"]
 ARMS = ["CP", "PCCP-inf", "PCCP-R", "ACI", "PCCP-inf+ACI", "PCCP-R+ACI"]
+# feedback protocols of the sequential simulation present in the stored results (the delayed ones were added after the first release)
+SEQ_PROTS = [p for p in ("oracle", "delay10", "delay50", "delay125", "eol") if p in R[0]["targets"]["FD004"]["caps"]["125"]["B"]["sequential"]]
 
 
 def ms(vals):
@@ -65,7 +67,7 @@ for fd in TARGETS:
     seq = {}
     for cap in ("125", "100", "150"):
         seq[cap] = {}
-        for prot in ("oracle", "eol"):
+        for prot in SEQ_PROTS:
             seq[cap][prot] = {}
             for arm in ARMS:
                 seq[cap][prot][arm] = {}
@@ -75,7 +77,7 @@ for fd in TARGETS:
                         rows = [b["sequential"][prot][arm][delta][cf] for b in B[cap]]
                         seq[cap][prot][arm][delta][cf] = {k: ms([r_[k] for r_ in rows]) for k in ("rate", "fail_rate", "waste", "rate_beta0", "beta")}
     n["sequential"] = seq
-    n["seq_diag"] = {cap: {prot: {k: ms([b["sequential"][prot]["_diag"][k] for b in B[cap]]) for k in ("frac_level_saturated", "alpha_min")} for prot in ("oracle", "eol")} for cap in B}
+    n["seq_diag"] = {cap: {prot: {k: ms([b["sequential"][prot]["_diag"][k] for b in B[cap]]) for k in ("frac_level_saturated", "alpha_min")} for prot in SEQ_PROTS} for cap in B}
     print(" -- sequential (cap 125): cost rate x1e3 [fail %] , Delta=10")
     for prot in ("oracle", "eol"):
         for cf in ("20", "100"):
